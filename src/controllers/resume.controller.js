@@ -1,6 +1,6 @@
 const Resume          = require("../models/resume.model");
 const { extractText, deleteFile } = require("../services/file.service");
-const orchestrator    = require("../../../ai/orchestrator");
+const orchestrator    = require("../../ai/orchestrator");
 
 // Normalise a filename for name-match comparison (strip extension, lowercase, trim)
 const baseName = (filename) =>

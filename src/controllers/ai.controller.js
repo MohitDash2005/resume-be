@@ -1,4 +1,4 @@
-const orchestrator = require("../../../ai/orchestrator");
+const orchestrator = require("../../ai/orchestrator");
 
 // POST /api/ai/analyze
 const analyzeResume = async (req, res, next) => {
