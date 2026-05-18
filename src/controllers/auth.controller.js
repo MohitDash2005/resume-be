@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../services/token.service");
+const { getPrimaryClientUrl } = require("../config/clientOrigins");
 
 // Helpers
 const isPhone = (v) => /^\+?[0-9]{7,15}$/.test(v?.replace(/[\s\-()]/g, ""));
@@ -205,10 +206,10 @@ const oauthCallback = async (req, res) => {
     const refreshToken = generateRefreshToken(user._id);
     user.refreshToken  = refreshToken;
     await user.save({ validateBeforeSave: false });
-    const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+    const clientUrl = getPrimaryClientUrl();
     res.redirect(`${clientUrl}/oauth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`);
   } catch {
-    res.redirect(`${process.env.CLIENT_URL}/login?error=oauth_failed`);
+    res.redirect(`${getPrimaryClientUrl()}/login?error=oauth_failed`);
   }
 };
 

@@ -10,6 +10,7 @@ const passport   = require("./config/passport");
 
 const path             = require("path");
 const connectDB        = require("./config/db");
+const { corsOrigin }   = require("./config/clientOrigins");
 const { initSockets }  = require("./sockets/interview.socket");
 const errorHandler     = require("./middleware/errorHandler");
 
@@ -37,7 +38,7 @@ app.use(helmet({
   crossOriginOpenerPolicy: false, // allow Google popup flow
 }));
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  origin: corsOrigin,
   credentials: true,
 }));
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
@@ -49,7 +50,11 @@ app.use(session({
   secret: process.env.JWT_SECRET || "session_secret",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, maxAge: 10 * 60 * 1000 }, // 10 min — only needed during OAuth handshake
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 10 * 60 * 1000,
+  },
 }));
 app.use(passport.initialize());
 app.use(passport.session());

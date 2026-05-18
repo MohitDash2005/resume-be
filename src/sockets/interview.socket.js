@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
 const jwt        = require("jsonwebtoken");
+const { getClientOrigins } = require("../config/clientOrigins");
 
 // In-memory session store (replace with Redis in production)
 const activeSessions = new Map();
@@ -7,7 +8,7 @@ const activeSessions = new Map();
 const initSockets = (server) => {
   const io = new Server(server, {
     cors: {
-      origin:      process.env.CLIENT_URL || "http://localhost:3000",
+      origin:      getClientOrigins(),
       credentials: true,
     },
   });
